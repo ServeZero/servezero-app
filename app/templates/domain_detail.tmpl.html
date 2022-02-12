@@ -1,0 +1,107 @@
+<!doctype html>
+<!--
+* ServeZero
+* @version 
+* @link
+* Copyright 2021-2022 Naoki Hirata
+* Licensed under MIT
+-->
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <meta name="description" content="">
+  <meta name="author" content="Naoki Hirata">
+  <title>{{ app_name }}</title>
+
+  <!--<link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sign-in/">-->
+
+  <!-- ServeZero CSS -->
+  <link rel="stylesheet" href="/assets/css/tabler.css">
+</head>
+<body class="d-flex flex-column min-vh-100">
+  {% include "header.tmpl.html" %}
+  <main class="page-wrapper">
+    <div class="page-header">
+      <div class="container-xl">
+        <div class="row align-items-center">
+          <div class="col">
+            <h2 class="page-title">
+              ドメイン詳細
+            </h2>
+          </div>
+          <div class="col-auto ms-auto">
+            <a href="/" class="btn btn-primary">
+              戻る
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-body">
+      <div class="container-xl">
+        {% if error %}
+        <div class="alert alert-danger" role="alert">
+          <div class="d-flex">
+            <div>
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewbox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><circle cx="12" cy="12" r="9" /><line x1="12" y1="8" x2="12.01" y2="8" /><polyline points="11 12 12 12 12 16 13 16" /></svg>
+            </div>
+            <div>
+              <h4 class="alert-title">{{ error }}</h4>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        <div class="card card-md">
+          <div class="card-header">
+            <div class="card-title">{{ domain_name }}</div>
+          </div>
+          <div class="card-body">
+            <table class="table table-responsive table-transparent table-vcenter card-table">
+              <tr>
+                <td>
+                  <div class="strong">DB名</div>
+                </td>
+                <td >{{ db_name }}</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="strong">DBユーザ名</div>
+                </td>
+                <td >{{ db_user }}</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="strong">DBパスワード</div>
+                </td>
+                <td >{{ db_password }}</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="strong">アプリケーションタイプ</div>
+                </td>
+                <td >{{ app_type }}</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="strong">ディレクトリ</div>
+                </td>
+                <td >{{ app_dir }}</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="strong">作成日時</div>
+                </td>
+                <td >{{ created_dt }}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  {% include "footer.tmpl.html" %}
+  <script src="/assets/js/tabler.js"></script>
+</body>
+</html>

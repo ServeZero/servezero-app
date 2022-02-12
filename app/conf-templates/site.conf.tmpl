@@ -1,0 +1,72 @@
+# {{ servezero_generated }}
+#
+# Site configuration
+#
+server {
+    listen      80;
+#   listen      443 ssl;
+    server_name {{ domain_name }};
+
+    #
+    # Directory configuration
+    #
+    root  {{ vhost_path }}/{{ public_dir }};
+    index index.php index.html;
+
+    #
+    # Access log configuration
+    #
+    access_log /var/log/nginx/{{ domain_name }}-access.log  main;
+    error_log  /var/log/nginx/{{ domain_name }}-error.log warn;
+
+    #
+    # SSL configuration
+    #
+    #ssl_certificate     /etc/nginx/ssl/{{ domain_name }}/server.crt;
+    #ssl_certificate_key /etc/nginx/ssl/{{ domain_name }}/server.key;
+
+    #
+    # redirect server error pages
+    #
+    error_page 401 /unauthorized.html;
+    location = /unauthorized.html {
+        root   /var/www/error;
+    }
+    error_page 403 /forbidden.html;
+    location = /forbidden.html {
+        root   /var/www/error;
+    }
+    error_page 404 /notfound.html;
+    location = /notfound.html {
+        root   /var/www/error;
+    }
+    error_page   503 /serviceunavailable.html;
+    location = /serviceunavailable.html {
+        root   /var/www/error;
+    }
+    error_page   500 502 504  /internalservererror.html;
+    location = /internalservererror.html {
+        root   /var/www/error;
+    }
+
+    #
+    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+    #
+    location ~ \.php$ {
+        fastcgi_pass php:9000;      # 'php' is configured host name in /etc/hosts
+        include fastcgi_params;
+        fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+    #    fastcgi_intercept_errors on;
+    }
+
+    location = /favicon.icon {
+        #empty_gif;
+        access_log    off;
+        log_not_found off;
+    }
+    location = /robots.txt {
+        allow all;
+        access_log    off;
+        log_not_found off;
+    }
+}
