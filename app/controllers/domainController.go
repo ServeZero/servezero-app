@@ -34,7 +34,7 @@ const (
 	SITE_CONF_PUBLIC_DIR         = "public_html"
 	SITE_HOME_DIR_HEAD           = "vhost-"
 	SITE_DB_CREATE_SQL_TEMPLATE  = "createdb.sql.tmpl" // DB、DBユーザ生成用スクリプト
-	SITE_DB_DROP_SQL_TEMPLATE    = "drop.sql.tmpl"     // DB、DBユーザ破棄用スクリプト
+	SITE_DB_DROP_SQL_TEMPLATE    = "dropdb.sql.tmpl"   // DB、DBユーザ破棄用スクリプト
 	SITE_DB_NAME_HEAD            = "vhost-"
 	MSG_CHANGE_FILENAME          = "ファイル名を変更しました。%s → %s"
 	MSG_CREATE_DB                = "データベースを作成しました。DB名=%s, ユーザ=%s"
