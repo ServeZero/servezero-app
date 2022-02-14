@@ -24,12 +24,12 @@ func CheckEnv() {
 		if err == nil {
 			// システムが十分な稼働環境上で動作している
 			config.GetEnv().OnProductEnv = true
-			log.Info("Processing on product environment")
+			log.Info("Processing on PRODUCT environment")
 		} else {
-			log.Info("Processing on test environment. (Docker not running)")
+			log.Info("Processing on TEST environment. (Docker not running)")
 		}
 	} else {
-		log.Info("Processing on test environment.")
+		log.Info("Processing on TEST environment.")
 	}
 }
 

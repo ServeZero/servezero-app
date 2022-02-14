@@ -33,11 +33,15 @@ const (
 	SITE_CONF_TEMPLATE           = "site.conf.tmpl"       // Nginxサイト定義ファイルテンプレート
 	SITE_CONF_PUBLIC_DIR         = "public_html"
 	SITE_HOME_DIR_HEAD           = "vhost-"
-	SITE_DB_CREATE_SQL_TEMPLATE  = "createdb.sql.tmpl" // DB作成用スクリプト
+	SITE_DB_CREATE_SQL_TEMPLATE  = "createdb.sql.tmpl" // DB、DBユーザ生成用スクリプト
+	SITE_DB_DROP_SQL_TEMPLATE    = "drop.sql.tmpl"     // DB、DBユーザ破棄用スクリプト
 	SITE_DB_NAME_HEAD            = "vhost-"
 	MSG_CHANGE_FILENAME          = "ファイル名を変更しました。%s → %s"
 	MSG_CREATE_DB                = "データベースを作成しました。DB名=%s, ユーザ=%s"
 	MSG_CREATE_DB_FAILED         = "データベース作成に失敗しました。スクリプト=%s"
+	MSG_DROP_DB                  = "データベースを削除しました。DB名=%s, ユーザ=%s"
+	MSG_DROP_DB_FAILED           = "データベース削除に失敗しました。スクリプト=%s"
+	MSG_DELETE_DOMAIN_DIR_FAILED = "ドメインのディレクトリ削除に失敗しました。%s"
 )
 
 type DomainController struct{}
@@ -56,11 +60,11 @@ func (pc *DomainController) Index(c *gin.Context) {
 
 	if act == "add" { // ドメイン追加の場合
 		// 入力値取得
-		name := strings.TrimSpace(c.PostForm("name")) // ドメイン名
+		domainName := strings.TrimSpace(c.PostForm("name")) // ドメイン名
 
 		// 入力値チェック
 		newDomain := &ValidateNewDomain{
-			Name: name,
+			Name: domainName,
 		}
 		validate := validator.New()
 		err := validate.Struct(newDomain)
@@ -83,15 +87,15 @@ func (pc *DomainController) Index(c *gin.Context) {
 
 		if error == "" {
 			// ドメイン存在確認
-			row := domainDb.GetDomainByName(name)
+			row := domainDb.GetDomainByName(domainName)
 			if row == nil {
 				// ドメインハッシュ追加
-				domainHash := generateDomainHash(name) // ドメインハッシュ作成
-				domainId := domainDb.AddDomain(name, name /*ディレクトリ名*/, domainHash)
+				domainHash := generateDomainHash(domainName) // ドメインハッシュ作成
+				domainId := domainDb.AddDomain(domainName, domainName /*ディレクトリ名*/, domainHash)
 				if domainId > 0 { // ドメイン登録成功の場合
 					// ########## Webアプリケーションの配置 ##########
-					// サイト用ディレクトリ作成
-					siteDirPath := config.GetEnv().NginxVirtualHostHome + "/" + name
+					// Webアプリケーションのディレクトリ作成
+					siteDirPath := config.GetEnv().NginxVirtualHostHome + "/" + domainName
 					err = os.MkdirAll(siteDirPath, 0755)
 					if err != nil {
 						log.Error(err)
@@ -103,7 +107,7 @@ func (pc *DomainController) Index(c *gin.Context) {
 						installResult := webApp.Install(siteDirPath + "/" + SITE_CONF_PUBLIC_DIR)
 						if installResult {
 							// Webアプリケーションの公開ディレクトリのオーナーをPHP-FPM用(www-data)に変更
-							changePublicDirOwner(name)
+							changePublicDirOwner(domainName)
 						}
 					} else {
 						log.Error(err)
@@ -116,10 +120,10 @@ func (pc *DomainController) Index(c *gin.Context) {
 						log.Error(err)
 					}
 
-					// DB作成スクリプト実行
-					dbName := SITE_DB_NAME_HEAD + name
-					dbUser := SITE_DB_NAME_HEAD + name
-					dbResult := createDb(name, dbName, dbUser, password)
+					// DB、DBユーザ生成スクリプト実行
+					dbName := SITE_DB_NAME_HEAD + domainName
+					dbUser := SITE_DB_NAME_HEAD + domainName
+					dbResult := createDb(dbName, dbUser, password)
 					if dbResult {
 						// Webアプリケーション情報を登録
 						domainDb.UpdateAppInfo(webapp.WordPressWebAppType, domainId, dbName, dbUser, password)
@@ -127,7 +131,7 @@ func (pc *DomainController) Index(c *gin.Context) {
 
 					// ########## Nginxの設定 ##########
 					// サイト定義ファイル追加
-					installSiteConf(name, domainHash)
+					installSiteConf(domainName, domainHash)
 
 					// サイト定義格納ディレクトリがある場合はNginxを再起動する
 					_, err = os.Stat(config.GetEnv().NginxSiteConfPath)
@@ -136,7 +140,7 @@ func (pc *DomainController) Index(c *gin.Context) {
 						restartResult := restartNginxService()
 						if !restartResult {
 							// 再起動不可の場合は定義ファイルを外して再度実行
-							recoverSiteConf(name)
+							recoverSiteConf(domainName)
 
 							restartNginxService()
 						}
@@ -158,9 +162,21 @@ func (pc *DomainController) Index(c *gin.Context) {
 		if row == nil {
 			error = "ドメイン削除に失敗しました"
 		} else {
-			domainName := row["name"]
+			domainName := row["name"].(string)
 
-			// ドメイン削除
+			// Webアプリケーションのディレクトリ削除
+			siteDirPath := config.GetEnv().NginxVirtualHostHome + "/" + domainName
+			err := os.RemoveAll(siteDirPath)
+			if err != nil {
+				log.Errorf(MSG_DELETE_DOMAIN_DIR_FAILED, err)
+			}
+
+			// DB、DBユーザ破棄スクリプト実行
+			dbName := SITE_DB_NAME_HEAD + domainName
+			dbUser := SITE_DB_NAME_HEAD + domainName
+			dropDb(dbName, dbUser)
+
+			// ドメイン情報削除
 			result := domainDb.DelDomain(domainId)
 			if result {
 				success = fmt.Sprintf("ドメイン「%s」を削除しました", domainName)
@@ -316,8 +332,8 @@ func changePublicDirOwner(domain string) bool {
 	}
 }
 
-// DBを生成
-func createDb(domainName string, dbname string, user string, password string) bool {
+// DB、DBユーザを生成
+func createDb(dbname string, user string, password string) bool {
 	// Dockerコマンドが実行できる場合のみ実行
 	if !config.GetEnv().OnProductEnv {
 		log.Infof("[TEST-env] DB not created.")
@@ -346,6 +362,37 @@ func createDb(domainName string, dbname string, user string, password string) bo
 		return true
 	} else {
 		log.Errorf(MSG_CREATE_DB_FAILED, strings.Replace(createDbScript, "\n", "", -1))
+		return false
+	}
+}
+
+// DB、DBユーザを破棄
+func dropDb(dbname string, user string) bool {
+	// Dockerコマンドが実行できる場合のみ実行
+	if !config.GetEnv().OnProductEnv {
+		log.Infof("[TEST-env] DB not dropped.")
+		return false
+	}
+
+	// DB破棄スクリプトを読み込む
+	createDbTemplatePath := config.GetEnv().NginxSiteConfTemplateDir + "/" + SITE_DB_DROP_SQL_TEMPLATE
+	template := pongo2.Must(pongo2.FromFile(createDbTemplatePath))
+	createDbScript, err := template.Execute(pongo2.Context{
+		"db_name": dbname,
+		"db_user": user,
+	})
+	if err != nil {
+		log.Error(err)
+		return false
+	}
+
+	// DB、DBユーザを作成
+	_, err = exec.Command("docker", "exec", "db", "mysql", "-u", "root", "-p"+config.GetEnv().MariaDbRootPassword, "-e", createDbScript).Output()
+	if err == nil {
+		log.Info(fmt.Sprintf(MSG_DROP_DB, dbname, user))
+		return true
+	} else {
+		log.Errorf(MSG_DROP_DB_FAILED, strings.Replace(createDbScript, "\n", "", -1))
 		return false
 	}
 }
