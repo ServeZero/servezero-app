@@ -28,6 +28,9 @@ type Env struct {
 	DebugLog        bool
 	DebugLogPath    string
 
+	// Dockerコンテナ
+	DockerContainerNameDb string // コンテナ名(DB)
+
 	// Nginx設定ファイル
 	NginxSiteConfPath        string
 	NginxSiteConfTemplateDir string

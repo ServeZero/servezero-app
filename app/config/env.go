@@ -30,6 +30,9 @@ var env = Env{
 	DebugLog:        true,
 	DebugLogPath:    "log/debug.log",
 
+	// Dockerコンテナ
+	DockerContainerNameDb: "db", // コンテナ名(DB)
+
 	// Nginx設定ファイル
 	NginxSiteConfPath:        PRODUCT_PATH + "/volumes/nginx/sites-available", // サイト定義ファイル格納用
 	NginxSiteConfTemplateDir: "conf-templates",
