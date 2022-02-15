@@ -195,6 +195,7 @@ func (pc *DomainController) Index(c *gin.Context) {
 			"app_name":   config.GetEnv().AppName, // ナビゲーションメニュータイトル
 			"page_title": "ドメイン一覧",
 			"domainList": rows,
+			"appList":    webapp.AppInfoList,
 			"success":    success,
 		})
 	} else {
@@ -202,6 +203,7 @@ func (pc *DomainController) Index(c *gin.Context) {
 			"app_name":   config.GetEnv().AppName, // ナビゲーションメニュータイトル
 			"page_title": "ドメイン一覧",
 			"domainList": rows,
+			"appList":    webapp.AppInfoList,
 			"error":      error,
 		})
 	}
