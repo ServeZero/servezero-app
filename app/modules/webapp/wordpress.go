@@ -8,13 +8,8 @@ import (
 
 type wordpressApp struct {
 	Webapp
+	AppType string
 }
-
-const (
-	DOWNLOAD_URL       = "https://ja.wordpress.org/latest-ja.tar.gz"
-	DOWNLOAD_FILE_HEAD = "download-"
-	DOWNLOAD_DIR_HEAD  = "download-dir-"
-)
 
 // Webアプリケーションのソースパッケージをダウンロードし、指定のパスに展開
 // path=解凍したディレクトリの配置パス
@@ -31,7 +26,7 @@ func (wordpressApp *wordpressApp) Install(path string) bool {
 	//defer file.Close()
 
 	// WordPressのソースアーカイブをダウンロード。HTTPリクエストヘッダから正式なファイル名を取得。
-	filename, err := downloadFile(tempFile, DOWNLOAD_URL)
+	filename, err := downloadFile(tempFile, getDownloadUrl(wordpressApp.AppType))
 	if err != nil {
 		log.Error(err)
 		return false

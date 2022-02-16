@@ -9,7 +9,13 @@ import (
 )
 
 const (
+	DOWNLOAD_FILE_HEAD = "download-"
+	DOWNLOAD_DIR_HEAD  = "download-dir-"
+)
+
+const (
 	WordPressWebAppType = "wordpress"
+	JoomlaWebAppType    = "joomla"
 )
 
 type Webapp interface {
@@ -21,9 +27,11 @@ func NewWebapp(appType string) (Webapp, error) {
 	// Webアプリケーションに合わせてインスタンス作成
 	switch appType {
 	case WordPressWebAppType:
-		return &wordpressApp{}, nil
+		return &wordpressApp{AppType: WordPressWebAppType}, nil
+	case JoomlaWebAppType:
+		return &joomlaApp{AppType: JoomlaWebAppType}, nil
 	}
-	return nil, fmt.Errorf("wrong webapp type")
+	return nil, fmt.Errorf("wrong webapp type: %s", appType)
 }
 
 func downloadFile(filepath string, url string) (string, error) {

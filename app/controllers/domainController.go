@@ -47,7 +47,8 @@ const (
 type DomainController struct{}
 
 type ValidateNewDomain struct {
-	Name string `validate:"required,fqdn"`
+	Name    string `validate:"required,fqdn"`
+	AppType string `validate:"required,apptype"`
 }
 
 func (pc *DomainController) Index(c *gin.Context) {
@@ -61,12 +62,22 @@ func (pc *DomainController) Index(c *gin.Context) {
 	if act == "add" { // ドメイン追加の場合
 		// 入力値取得
 		domainName := strings.TrimSpace(c.PostForm("name")) // ドメイン名
+		appType := strings.TrimSpace(c.PostForm("apptype")) // Webアプリケーションタイプ
 
-		// 入力値チェック
+		// 入力値フィールド定義
 		newDomain := &ValidateNewDomain{
-			Name: domainName,
+			Name:    domainName,
+			AppType: appType,
 		}
 		validate := validator.New()
+
+		// Webアプリケーションタイプの値チェック処理追加
+		_ = validate.RegisterValidation("apptype", func(fl validator.FieldLevel) bool {
+			result := webapp.CheckAppType(fl.Field().String())
+			return result
+		})
+
+		// 入力値チェック
 		err := validate.Struct(newDomain)
 		if err != nil {
 			// エラーメッセージ設定
@@ -80,6 +91,13 @@ func (pc *DomainController) Index(c *gin.Context) {
 						error = "ドメイン名を入力してください"
 					case "fqdn":
 						error = "ドメイン名のフォーマットが不正です"
+					}
+				case "AppType":
+					switch err.Tag() {
+					case "required":
+						error = "Webアプリケーションが選択されていません"
+					case "apptype":
+						error = "選択できないWebアプリケーションを選択しました"
 					}
 				}
 			}
@@ -102,7 +120,7 @@ func (pc *DomainController) Index(c *gin.Context) {
 					}
 
 					// Webアプリケーションインストール(公開ディレクトリ)
-					webApp, err := webapp.NewWebapp(webapp.WordPressWebAppType)
+					webApp, err := webapp.NewWebapp(appType)
 					if err == nil {
 						installResult := webApp.Install(siteDirPath + "/" + SITE_CONF_PUBLIC_DIR)
 						if installResult {
@@ -126,7 +144,7 @@ func (pc *DomainController) Index(c *gin.Context) {
 					dbResult := createDb(dbName, dbUser, password)
 					if dbResult {
 						// Webアプリケーション情報を登録
-						domainDb.UpdateAppInfo(webapp.WordPressWebAppType, domainId, dbName, dbUser, password)
+						domainDb.UpdateAppInfo(appType, domainId, dbName, dbUser, password)
 					}
 
 					// ########## Nginxの設定 ##########
