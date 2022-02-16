@@ -5,7 +5,10 @@ import (
 	"io"
 	"mime"
 	"net/http"
+	"net/url"
 	"os"
+	"path/filepath"
+	"web/modules/log"
 )
 
 const (
@@ -34,9 +37,11 @@ func NewWebapp(appType string) (Webapp, error) {
 	return nil, fmt.Errorf("wrong webapp type: %s", appType)
 }
 
-func downloadFile(filepath string, url string) (string, error) {
+func downloadFile(destPath string, downloadUrl string) (string, error) {
+	log.Infof("Download web application package. url: %s", downloadUrl)
+
 	// URLからファイルをダウンロード
-	resp, err := http.Get(url)
+	resp, err := http.Get(downloadUrl)
 	if err != nil {
 		return "", err
 	}
@@ -48,18 +53,26 @@ func downloadFile(filepath string, url string) (string, error) {
 	}
 
 	// HTTPレスポンスヘッダから正式なファイル名を取得
+	var filename string
 	filenameCont := resp.Header.Get("Content-Disposition")
 	mediaType, params, err := mime.ParseMediaType(filenameCont)
-	if err != nil {
-		return "", fmt.Errorf("downloadFile: ParseMediaType() failed: %s", err.Error())
+	if err == nil {
+		if mediaType != "attachment" {
+			return "", fmt.Errorf("downloadFile: ParseMediaType() mediaType not match 'attachment': %s", mediaType)
+		}
+		filename = params["filename"]
+	} else {
+		// return "", fmt.Errorf("downloadFile: ParseMediaType() failed: %s", err.Error())
+		// MediaTypeが取得できない場合はURLのファイル名を取得
+		parsedUrl, err := url.Parse(downloadUrl)
+		if err != nil {
+			return "", fmt.Errorf("downloadFile: Parse() error: %s", err)
+		}
+		filename = filepath.Base(parsedUrl.Path)
 	}
-	if mediaType != "attachment" {
-		return "", fmt.Errorf("downloadFile: ParseMediaType() mediaType not match 'attachment': %s", mediaType)
-	}
-	filename := params["filename"]
 
 	// ダウンロードデータをファイルに保存
-	out, err := os.Create(filepath)
+	out, err := os.Create(destPath)
 	if err != nil {
 		return "", err
 	}

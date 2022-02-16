@@ -145,6 +145,9 @@ func (pc *DomainController) Index(c *gin.Context) {
 					if dbResult {
 						// Webアプリケーション情報を登録
 						domainDb.UpdateAppInfo(appType, domainId, dbName, dbUser, password)
+					} else {
+						// Webアプリケーションタイプのみ登録
+						domainDb.UpdateAppInfo(appType, domainId, "", "", "")
 					}
 
 					// ########## Nginxの設定 ##########
