@@ -133,9 +133,9 @@
                 {% for item in appList %}
                 <label class="form-selectgroup-item">
                   <input type="radio" name="icons" value="{{ item.Type }}" class="form-selectgroup-input">
-                  <span class="form-selectgroup-label"><!-- Download SVG icon from http://tabler-icons.io/i/home -->
-                    <!-- SVG icon code with class="me-1" -->
-                    {{ item.Name }}</span>
+                  <span class="form-selectgroup-label">
+                    <img src="/assets/img/app/{{ item.IconName }}" style="width:32px;height:32px;" /> {{ item.Name }}
+                  </span>
                 </label>
                 {% endfor %}
               </div>
