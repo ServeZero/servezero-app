@@ -244,18 +244,19 @@ func (pc *DomainController) Detail(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "domain_detail.tmpl.html", pongo2.Context{
-		"app_name":    config.GetEnv().AppName, // ナビゲーションメニュータイトル
-		"page_title":  "ドメイン詳細",
-		"domain_url":  "http://" + row["name"].(string) + "/",
-		"domain_name": row["name"],
-		"db_name":     row["db_name"],
-		"db_user":     row["db_user"],
-		"db_password": row["db_password"],
-		"db_host":     config.GetEnv().DockerContainerNameDb,
-		"app_type":    row["app_type"],
-		"app_dir":     config.GetEnv().NginxVirtualHostHome + "/" + row["dir_name"].(string) + "/" + SITE_CONF_PUBLIC_DIR,
-		"created_dt":  row["created_dt"],
-		"error":       error,
+		"app_name":      config.GetEnv().AppName, // ナビゲーションメニュータイトル
+		"page_title":    "ドメイン詳細",
+		"domain_url":    "http://" + row["name"].(string) + "/",
+		"domain_name":   row["name"],
+		"db_name":       row["db_name"],
+		"db_user":       row["db_user"],
+		"db_password":   row["db_password"],
+		"db_host":       config.GetEnv().DockerContainerNameDb,
+		"app_type":      row["app_type"],
+		"app_dir":       config.GetEnv().NginxVirtualHostHome + "/" + row["dir_name"].(string) + "/" + SITE_CONF_PUBLIC_DIR,
+		"app_slink_dir": config.GetEnv().NginxVirtualHostHomeAlias + "/" + row["dir_name"].(string) + "/" + SITE_CONF_PUBLIC_DIR,
+		"created_dt":    row["created_dt"],
+		"error":         error,
 	})
 }
 

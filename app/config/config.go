@@ -32,9 +32,10 @@ type Env struct {
 	DockerContainerNameDb string // コンテナ名(DB)
 
 	// Nginx設定ファイル
-	NginxSiteConfPath        string
-	NginxSiteConfTemplateDir string
-	NginxVirtualHostHome     string // Webサイトホームディレクトリ
+	NginxSiteConfPath         string
+	NginxSiteConfTemplateDir  string
+	NginxVirtualHostHome      string // Webサイトホームディレクトリ
+	NginxVirtualHostHomeAlias string // Webサイトホームディレクトリ
 	// 設定ファイル定義用
 	NginxContainerVirtualHostHome string
 

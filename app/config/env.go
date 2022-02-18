@@ -34,9 +34,10 @@ var env = Env{
 	DockerContainerNameDb: "db", // コンテナ名(DB)
 
 	// Nginx設定ファイル
-	NginxSiteConfPath:        PRODUCT_PATH + "/volumes/nginx/sites-available", // サイト定義ファイル格納用
-	NginxSiteConfTemplateDir: "conf-templates",
-	NginxVirtualHostHome:     PRODUCT_PATH + "/volumes/vhost", // Webサイトホームディレクトリ
+	NginxSiteConfPath:         PRODUCT_PATH + "/volumes/nginx/sites-available", // サイト定義ファイル格納用
+	NginxSiteConfTemplateDir:  "conf-templates",
+	NginxVirtualHostHome:      PRODUCT_PATH + "/volumes/vhost", // Webサイトホームディレクトリ
+	NginxVirtualHostHomeAlias: "/var/www/vhost",                // Webサイトホームディレクトリ
 	// 設定ファイル定義用
 	NginxContainerVirtualHostHome: "/var/www/vhost",
 
