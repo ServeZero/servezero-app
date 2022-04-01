@@ -17,6 +17,20 @@
 
   <!-- ServeZero CSS -->
   <link rel="stylesheet" href="/assets/css/tabler.css">
+  <style>
+    .overlay_progress {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      /*color: white;*/
+      background-color: rgba(0,0,0,0.5);
+      z-index: 10;
+      visibility: hidden;
+    }
+    .overlay_progress .message{
+      margin-top: 10%;
+    }
+  </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
   {% include "header.tmpl.html" %}
@@ -114,9 +128,15 @@
     </div>
   </main>
   <div class="modal modal-blur fade" id="modal-add" tabindex="-1" role="dialog" aria-hidden="true">
+    <div id="progress-add" class="overlay_progress">
+      <div class="d-flex justify-content-center message">
+        <h3>処理中<span class="animated-dots"></span></h3>
+        <div class="spinner-border" role="status"></div>
+      </div>
+    </div>
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
       <div class="modal-content">
-        <form method="post">
+        <form id="modal-add-form" method="post">
           <input type="hidden" name="act" value="add">
           <div class="modal-header">
             <h5 class="modal-title">新規ドメイン</h5>
@@ -186,8 +206,16 @@
   {% include "footer.tmpl.html" %}
   <script src="/assets/js/tabler.js"></script>
   <script>
-    var exampleModal = document.getElementById('modal-del')
-    exampleModal.addEventListener('show.bs.modal', function (event) {
+    // 新規用ダイアログ
+    var addModalForm = document.getElementById('modal-add-form')
+    addModalForm.addEventListener('submit', function (event) {
+      // 処理中メッセージ表示
+      document.getElementById('progress-add').style.visibility = "visible"
+    })
+
+    // 削除用ダイアログ
+    var delModal = document.getElementById('modal-del')
+    delModal.addEventListener('show.bs.modal', function (event) {
       // ドメイン名取得
       var button = event.relatedTarget
       var domainName = button.getAttribute('data-bs-domain_name')
