@@ -166,12 +166,15 @@ func (pc *DomainController) Index(c *gin.Context) {
 							restartNginxService()
 						}
 					}
-					success = "ドメインを登録しました"
+					//success = "ドメインを登録しました"
+					success = fmt.Sprintf("ドメイン「%s」を登録しました", domainName)
 				} else {
-					error = "ドメイン登録に失敗しました"
+					//error = "ドメイン登録に失敗しました"
+					error = fmt.Sprintf("ドメイン登録「%s」に失敗しました", domainName)
 				}
 			} else {
-				error = "登録済みのドメインです"
+				//error = "登録済みのドメインです"
+				error = fmt.Sprintf("ドメイン「%s」は登録済みのドメインです", domainName)
 			}
 		}
 	} else if act == "del" { // ドメイン削除の場合
