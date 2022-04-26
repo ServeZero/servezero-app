@@ -242,7 +242,7 @@ func Infof(format string, args ...interface{}) {
 // #####################################
 // アプリケーションエラー用(Error, Fatal)
 // #####################################
-func ErrorObject(err error) {
+func ErrorStack(err error) {
 	if errorLog != nil {
 		err = errors.WithStack(err)
 		msg := fmt.Sprintf("%+v", err)
@@ -277,7 +277,7 @@ func Errorf(format string, args ...interface{}) {
 		errorLog.Errorf(format, args...)
 	}
 }
-func FatalObject(err error) {
+func FatalStack(err error) {
 	if errorLog != nil {
 		err = errors.WithStack(err)
 		msg := fmt.Sprintf("%+v", err)

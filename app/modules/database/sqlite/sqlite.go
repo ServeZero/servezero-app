@@ -46,7 +46,7 @@ func checkErr(err error, path string) {
 		// 異常時は終了
 		absPath, _ := filepath.Abs(path)
 		log.Error("error path: " + absPath)
-		log.FatalObject(err) // スタックトレースも出力
+		log.FatalStack(err) // スタックトレースも出力
 	}
 }
 
@@ -67,7 +67,7 @@ func (db *BaseDb) Exec(query string, args ...interface{}) (sql.Result, error) {
 func (db *BaseDb) QueryRows(query string, args ...interface{}) []map[string]interface{} {
 	rs, err := sqlxDb.Query(query, args...)
 	if err != nil {
-		log.ErrorObject(err)
+		log.ErrorStack(err)
 		return nil
 	}
 
@@ -75,13 +75,13 @@ func (db *BaseDb) QueryRows(query string, args ...interface{}) []map[string]inte
 
 	col, colErr := rs.Columns()
 	if colErr != nil {
-		log.ErrorObject(colErr)
+		log.ErrorStack(colErr)
 		return nil
 	}
 
 	typeVal, err := rs.ColumnTypes()
 	if err != nil {
-		log.ErrorObject(err)
+		log.ErrorStack(err)
 		return nil
 	}
 
@@ -94,7 +94,7 @@ func (db *BaseDb) QueryRows(query string, args ...interface{}) []map[string]inte
 		}
 
 		if scanErr := rs.Scan(colVar...); scanErr != nil {
-			log.ErrorObject(err)
+			log.ErrorStack(err)
 			return nil
 		}
 
@@ -105,7 +105,7 @@ func (db *BaseDb) QueryRows(query string, args ...interface{}) []map[string]inte
 		results = append(results, result)
 	}
 	if err := rs.Err(); err != nil {
-		log.ErrorObject(err)
+		log.ErrorStack(err)
 		return nil
 	}
 
@@ -117,7 +117,7 @@ func (db *BaseDb) QueryRows(query string, args ...interface{}) []map[string]inte
 func (db *BaseDb) QueryRow(query string, args ...interface{}) map[string]interface{} {
 	rs, err := sqlxDb.Query(query, args...)
 	if err != nil {
-		log.ErrorObject(err)
+		log.ErrorStack(err)
 		return nil
 	}
 
@@ -125,13 +125,13 @@ func (db *BaseDb) QueryRow(query string, args ...interface{}) map[string]interfa
 
 	col, colErr := rs.Columns()
 	if colErr != nil {
-		log.ErrorObject(colErr)
+		log.ErrorStack(colErr)
 		return nil
 	}
 
 	typeVal, err := rs.ColumnTypes()
 	if err != nil {
-		log.ErrorObject(err)
+		log.ErrorStack(err)
 		return nil
 	}
 
@@ -144,7 +144,7 @@ func (db *BaseDb) QueryRow(query string, args ...interface{}) map[string]interfa
 		}
 
 		if scanErr := rs.Scan(colVar...); scanErr != nil {
-			log.ErrorObject(err)
+			log.ErrorStack(err)
 			return nil
 		}
 
@@ -154,7 +154,7 @@ func (db *BaseDb) QueryRow(query string, args ...interface{}) map[string]interfa
 		}
 	}
 	if err := rs.Err(); err != nil {
-		log.ErrorObject(err)
+		log.ErrorStack(err)
 		return nil
 	}
 
