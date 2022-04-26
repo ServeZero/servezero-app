@@ -35,13 +35,15 @@ func (f *customStdFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	var levelColor int
 	switch entry.Level {
 	case logrus.DebugLevel, logrus.TraceLevel:
-		levelColor = 31 // gray
+		levelColor = 36 // シアン
 	case logrus.WarnLevel:
-		levelColor = 33 // yellow
-	case logrus.ErrorLevel, logrus.FatalLevel, logrus.PanicLevel:
-		levelColor = 31 // red
+		levelColor = 33 // 黄
+	case logrus.ErrorLevel:
+		levelColor = 31 // 赤
+	case logrus.FatalLevel, logrus.PanicLevel:
+		levelColor = 41 // 赤反転
 	default:
-		levelColor = 36 // blue
+		levelColor = 34 // 青
 	}
 	// フォーマット: [INFO] [2021-10-06 15:49:23] message.....
 	return []byte(fmt.Sprintf("\x1b[%dm[%s]\x1b[0m [%s] %s", levelColor, strings.ToUpper(entry.Level.String()), entry.Time.Format(f.TimestampFormat), entry.Message)), nil
