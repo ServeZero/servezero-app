@@ -198,8 +198,8 @@ func _initRotateLogger(path string) io.Writer {
 	writer, err := rotatelogs.New(
 		path+"-%Y%m%d",
 		rotatelogs.WithLinkName(path),
-		rotatelogs.WithRotationTime(time.Hour*24), // 1日ごとにローテーション
-		rotatelogs.WithRotationCount(5),           //Keep only the closest N log files. select WithMaxAge() or WithRotationCount().
+		rotatelogs.WithRotationTime(time.Hour*24), // ログの切り替え期間(1日ごと)
+		rotatelogs.WithRotationCount(5),           //	ログの最大ファイル数(5日分)
 	)
 	if err != nil {
 		logrus.Errorf("config local file system for logger error: %v", err)
