@@ -71,7 +71,7 @@ func _initAllLogger() {
 		accessLog.SetFormatter(&customStdFormatter{ // 標準出力用のログフォーマット
 			logrus.TextFormatter{
 				ForceColors:     true,
-				TimestampFormat: "2006-01-02 15:04:05",
+				TimestampFormat: config.GetEnv().LogTimestampFormat,
 				FullTimestamp:   true,
 			}})
 		accessLog.Hooks.Add(lfshook.NewHook(
@@ -85,7 +85,7 @@ func _initAllLogger() {
 				logrus.TraceLevel: writer,
 			},
 			&easy.Formatter{ // ファイル出力用のログフォーマット
-				TimestampFormat: "2006-01-02 15:04:05",
+				TimestampFormat: config.GetEnv().LogTimestampFormat,
 				LogFormat:       "[%lvl%] [%time%] %msg%",
 			},
 		))
@@ -106,7 +106,7 @@ func _initAllLogger() {
 		errorLog.SetFormatter(&customStdFormatter{ // 標準エラー出力用のログフォーマット
 			logrus.TextFormatter{
 				ForceColors:     true,
-				TimestampFormat: "2006-01-02 15:04:05",
+				TimestampFormat: config.GetEnv().LogTimestampFormat,
 				FullTimestamp:   true,
 			}})
 		errorLog.Hooks.Add(lfshook.NewHook(
@@ -120,7 +120,7 @@ func _initAllLogger() {
 				logrus.TraceLevel: writer,
 			},
 			&easy.Formatter{ // ファイル出力用のログフォーマット
-				TimestampFormat: "2006-01-02 15:04:05",
+				TimestampFormat: config.GetEnv().LogTimestampFormat,
 				LogFormat:       "[%lvl%] [%time%] %msg%",
 			},
 		))
@@ -134,7 +134,7 @@ func _initAllLogger() {
 		securityLog.SetFormatter(&customStdFormatter{ // 標準エラー出力用のログフォーマット
 			logrus.TextFormatter{
 				ForceColors:     true,
-				TimestampFormat: "2006-01-02 15:04:05",
+				TimestampFormat: config.GetEnv().LogTimestampFormat,
 				FullTimestamp:   true,
 			}})
 		securityLog.Hooks.Add(lfshook.NewHook(
@@ -148,7 +148,7 @@ func _initAllLogger() {
 				logrus.TraceLevel: writer,
 			},
 			&easy.Formatter{ // ファイル出力用のログフォーマット
-				TimestampFormat: "2006-01-02 15:04:05",
+				TimestampFormat: config.GetEnv().LogTimestampFormat,
 				LogFormat:       "[%lvl%] [%time%] %msg%",
 			},
 		))
@@ -163,7 +163,7 @@ func _initAllLogger() {
 		debugLog.SetFormatter(&customStdFormatter{ // 標準出力用のログフォーマット
 			logrus.TextFormatter{
 				ForceColors:     true,
-				TimestampFormat: "2006-01-02 15:04:05",
+				TimestampFormat: config.GetEnv().LogTimestampFormat,
 				FullTimestamp:   true,
 			}})
 		debugLog.Hooks.Add(lfshook.NewHook(
@@ -177,7 +177,7 @@ func _initAllLogger() {
 				logrus.TraceLevel: writer,
 			},
 			&easy.Formatter{ // ファイル出力用のログフォーマット
-				TimestampFormat: "2006-01-02 15:04:05",
+				TimestampFormat: config.GetEnv().LogTimestampFormat,
 				LogFormat:       "[%lvl%] [%time%] %msg%",
 			},
 		))

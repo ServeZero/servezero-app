@@ -21,14 +21,15 @@ var env = Env{
 	DatabasePath: PRODUCT_PATH + "/config",
 
 	// ログ機能
-	AccessLog:       true,
-	AccessLogPath:   "log/access.log",
-	ErrorLog:        true,
-	ErrorLogPath:    "log/error.log",
-	SecurityLog:     true,
-	SecurityLogPath: "log/security.log",
-	DebugLog:        true,
-	DebugLogPath:    "log/debug.log",
+	AccessLog:          true,
+	AccessLogPath:      "log/access.log",
+	ErrorLog:           true,
+	ErrorLogPath:       "log/error.log",
+	SecurityLog:        true,
+	SecurityLogPath:    "log/security.log",
+	DebugLog:           true,
+	DebugLogPath:       "log/debug.log",
+	LogTimestampFormat: "2006-01-02 15:04:05",
 
 	// Dockerコンテナ
 	DockerContainerNameDb: "db", // コンテナ名(DB)

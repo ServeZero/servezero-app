@@ -19,14 +19,15 @@ type Env struct {
 	DatabasePath string
 
 	// ログ機能
-	AccessLog       bool
-	AccessLogPath   string
-	ErrorLog        bool
-	ErrorLogPath    string
-	SecurityLog     bool
-	SecurityLogPath string
-	DebugLog        bool
-	DebugLogPath    string
+	AccessLog          bool
+	AccessLogPath      string
+	ErrorLog           bool
+	ErrorLogPath       string
+	SecurityLog        bool
+	SecurityLogPath    string
+	DebugLog           bool
+	DebugLogPath       string
+	LogTimestampFormat string
 
 	// Dockerコンテナ
 	DockerContainerNameDb string // コンテナ名(DB)
