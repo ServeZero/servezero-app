@@ -8,7 +8,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
-	"web/modules/log"
+	"web/lib/log"
 )
 
 const (

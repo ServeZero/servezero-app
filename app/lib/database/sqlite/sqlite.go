@@ -5,8 +5,8 @@ import (
 	"os"
 	"path/filepath"
 	"web/config"
-	"web/modules/fileutil"
-	"web/modules/log"
+	"web/lib/fileutil"
+	"web/lib/log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"

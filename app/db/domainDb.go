@@ -1,7 +1,7 @@
 package db
 
 import (
-	database "web/modules/database/sqlite"
+	database "web/lib/database/sqlite"
 )
 
 type DomainDb struct {

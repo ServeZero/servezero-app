@@ -3,7 +3,7 @@ package webapp
 import (
 	"os"
 	"web/config"
-	"web/modules/log"
+	"web/lib/log"
 )
 
 type joomlaApp struct {

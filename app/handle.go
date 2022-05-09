@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"runtime"
-	"web/modules/log"
+	"web/lib/log"
 
 	"github.com/flosch/pongo2"
 	"github.com/gin-gonic/gin"

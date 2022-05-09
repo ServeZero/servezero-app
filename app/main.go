@@ -5,8 +5,8 @@ package main
 
 import (
 	"runtime"
-	_ "web/modules/database/sqlite" // DB初期処理
-	"web/modules/server"
+	_ "web/lib/database/sqlite" // DB初期処理
+	"web/lib/server"
 )
 
 func main() {

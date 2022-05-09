@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"os"
 	"web/config"
-	"web/modules/log"
+	"web/lib/log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/securecookie"

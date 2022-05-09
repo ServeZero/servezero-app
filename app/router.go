@@ -5,7 +5,7 @@ import (
 	"time"
 	"web/config"
 	"web/controllers"
-	"web/modules/filters/auth"
+	"web/lib/filters/auth"
 
 	//"github.com/gin-contrib/pprof"
 

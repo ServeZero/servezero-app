@@ -6,7 +6,7 @@ import (
 	"strings"
 	"web/config"
 	"web/db"
-	"web/modules/filters/auth"
+	"web/lib/filters/auth"
 
 	"github.com/flosch/pongo2"
 	"github.com/gin-gonic/gin"

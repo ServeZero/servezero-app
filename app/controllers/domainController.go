@@ -12,8 +12,8 @@ import (
 	"time"
 	"web/config"
 	"web/db"
-	"web/modules/log"
-	"web/modules/webapp"
+	"web/lib/log"
+	"web/lib/webapp"
 
 	"github.com/flosch/pongo2"
 	"github.com/gin-gonic/gin"

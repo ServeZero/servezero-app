@@ -9,7 +9,7 @@ import (
 	"os/signal"
 	"time"
 	"web/config"
-	"web/modules/log"
+	"web/lib/log"
 
 	"github.com/gin-gonic/gin"
 )

@@ -2,7 +2,7 @@ package fileutil
 
 import (
 	"os"
-	"web/modules/log"
+	"web/lib/log"
 )
 
 func CopyFile(src string, dest string) bool {

@@ -3,8 +3,8 @@ package auth
 import (
 	"net/http"
 	"web/config"
-	"web/modules/filters/auth/drivers"
-	"web/modules/log"
+	"web/lib/filters/auth/drivers"
+	"web/lib/log"
 
 	"github.com/flosch/pongo2"
 	"github.com/gin-gonic/gin"
